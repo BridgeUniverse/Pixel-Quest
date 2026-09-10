@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pixel_quest/models/habit.dart';
+import 'package:pixel_quest/models/check_in.dart';
 import 'package:pixel_quest/core/scope/app_scope.dart';
+import 'package:pixel_quest/features/home/home_screen.dart';
+
 
 Future <void>  main() async {
 
@@ -10,80 +13,34 @@ Future <void>  main() async {
   await Hive.initFlutter();
 
   Hive.registerAdapter(HabitAdapter());
+  Hive.registerAdapter(CheckInAdapter());
 
-  final HabbitBox = await Hive.openBox<HabitAdapter>('habbits');
+  final habbitBox = await Hive.openBox<Habit>('habbits');
+  final checkInBox = await Hive.openBox<CheckIn>('checkIns');
 
-  runApp(const MyApp());
+  
+  
+  runApp( MyApp(habbitBox: habbitBox, checkInBox: checkInBox,));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  final Box<Habit> habbitBox;
+  final Box<CheckIn> checkInBox;
+  const MyApp({super.key, required this.habbitBox, required this.checkInBox});
+  
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-
-        title: Text(widget.title),
-      ),
-      body: Center(
-        
-        child: Column(
-          
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+    return AppScope(
+      habbitBox: habbitBox,
+      checkInBox : checkInBox ,
+      child: MaterialApp(
+        title: 'Pixel Quest',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        home: HomeScreen(),
       ),
     );
   }
 }
+
