@@ -1,20 +1,42 @@
-import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:pixel_quest/models/habit.dart';
 import 'package:pixel_quest/models/check_in.dart';
-import 'package:pixel_quest/core/scope/app_scope.dart';
 
+class LevelProgress {
+  final int level;
+  final int xp;
+  final int xpForNextLevel;
 
-int getXP(List<CheckIn> checkIns, List<Habit> habitBox) {
-  int xp = 0;
-  for (int i = 0; i < checkIns.length; i++) {
-    for(int j = 0; j < habitBox.length; j++) {
-      if (habitBox[j].id == checkIns[i].habitId) {
-      xp += habitBox[j].xpPerDone;
-      }
-    }
-  }
-  return xp;
+  LevelProgress({
+    required this.level,
+    required this.xp,
+    required this.xpForNextLevel,
+  });
+
 }
 
-  
+int getXP (List<CheckIn> checkIns, List<Habit> habitBox) {
+    int xp = 0;
+    for (int i = 0; i < checkIns.length; i++) {
+      for(int j = 0; j < habitBox.length; j++) {
+        if (habitBox[j].id == checkIns[i].habitId) {
+          xp += habitBox[j].xpPerDone;
+        }
+      }
+    }
+    return xp;
+  }
+
+  LevelProgress getLevelProgress(int xp) {
+    int level = 1;
+    int xpForNextLevel = 100;
+    while (xp >= xpForNextLevel) {
+      level++;
+      xp -= xpForNextLevel;
+      xpForNextLevel = (level * 100);
+    }
+    return LevelProgress(
+      level: level, 
+      xp: xp, 
+      xpForNextLevel: xpForNextLevel
+      );
+  }
