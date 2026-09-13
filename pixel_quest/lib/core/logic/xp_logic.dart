@@ -40,3 +40,53 @@ int getXP (List<CheckIn> checkIns, List<Habit> habitBox) {
       xpForNextLevel: xpForNextLevel
       );
   }
+
+
+
+String getTitle(int level) {
+  final rank = ((level-1)~/4)+1;
+  final tier = ((level-1)%4)+1;
+
+  String rankTitle;
+  String tierTitle;
+
+  switch(rank){
+    case 1:
+      rankTitle = "🌱 Новичок";
+      break ;
+    case 2:
+      rankTitle = "⚔️ Воин";
+      break;   
+    case 3:
+      rankTitle = "🐉 Герой";
+      break;  
+    default :
+      rankTitle = "👑 Легенда";
+      break ;
+  } 
+  switch(tier){
+    case 1:
+      tierTitle = "I";
+      break;
+    case 2:
+      tierTitle = "II";
+      break;
+    case 3: 
+      tierTitle = "III";
+      break;
+    case 4:
+      tierTitle = "IV";
+      break;
+    default :
+      tierTitle = "" ;
+      break;
+  }
+  if(rank == 4) {
+    return rankTitle;
+  }else {
+    return "$rankTitle $tierTitle";
+  }
+  
+}
+
+

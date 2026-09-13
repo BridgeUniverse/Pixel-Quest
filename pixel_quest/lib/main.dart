@@ -19,15 +19,19 @@ Future <void>  main() async {
   final habbitBox = await Hive.openBox<Habit>('habbits');
   final checkInBox = await Hive.openBox<CheckIn>('checkIns');
 
-  await habbitBox.put('1', Habit(id: '1', name: 'Drink Water', colorValue: Colors.blue.value, icon: "water_icon", xpPerDone: 150));
+  await habbitBox.put('1', Habit(id: '1', name: 'Drink Water', colorValue: Colors.blue.value, icon: "water_icon", xpPerDone: 12900));
   await checkInBox.put('1', CheckIn(habitId: '1', date: DateTime.now()));
   final checkIns = checkInBox.values.toList();
   final habitBox = habbitBox.values.toList();
   final xp = getXP(checkIns, habitBox);
   final progress = getLevelProgress(xp);
+  final getTitlee = getTitle(progress.level);
+  
   print('Level: ${progress.level}');
   print('XP for next level: ${progress.xpForNextLevel}');
   print('Current XP: ${progress.xp}');
+  print('Title: ${getTitlee}' );
+  
 
   runApp( MyApp(habbitBox: habbitBox, checkInBox: checkInBox,));
 }
